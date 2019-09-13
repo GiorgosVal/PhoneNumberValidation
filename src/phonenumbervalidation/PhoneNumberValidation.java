@@ -25,6 +25,7 @@ public class PhoneNumberValidation {
     public static void main(String[] args) {
 
         String s = "0 0 30 69 700 24 1 3 50 2";
+        s = "2 10 34 22 154";
 
         PhoneNumberValidation app = new PhoneNumberValidation();
         app.start(s);
@@ -34,6 +35,8 @@ public class PhoneNumberValidation {
     public void start(String s) {
         if (validateAndInitializeInput(s)) {
             interpret();
+            populate();
+            printInterpretations();
 
         } else {
             System.out.println("Not valid input.");
@@ -102,6 +105,8 @@ public class PhoneNumberValidation {
             } else if (hasLenth2AndEndsInZero && !isLastElement) {
                 list = removeZeros(number, input[i + 1]);
 
+            } else {
+                list.add(number);
             }
 
             interpretations.put(number + i, list);
@@ -170,10 +175,64 @@ public class PhoneNumberValidation {
 
         return numbers;
     }
-    
-    public 
-    
-    
-    
+
+    /**
+     * This method populates all possible combinations of the interpretations
+     * included in the HashMap. Each key of the HashMap contains as value a list
+     * of interpretations. The method starts from the two last keys of the
+     * HashMap and moves to the top. In each loop it combines the elements of
+     * the current list with these of the previous list. Through this
+     * combination, a new list is created, which replaces the list of the
+     * previous key. At the end of all loops, the first key of the HashMap
+     * contains a list with all possible combinations of the interpretations.
+     */
+    public void populate() {
+        for (int i = input.length - 1; i > 0; i--) {
+
+            List<String> last = interpretations.get(input[i] + i);
+            List<String> previous = interpretations.get(input[i - 1] + (i - 1));
+
+            List<String> replacement = new ArrayList();
+
+            for (String p : previous) {
+                for (String l : last) {
+                    replacement.add(p.concat(l));
+                }
+            }
+
+            interpretations.put(input[i - 1] + (i - 1), replacement);
+        }
+    }
+
+    /**
+     * This method prints each element while calling the checkTelephone() to
+     * check of the element is a valid telephone number.
+     */
+    public void printInterpretations() {
+        List<String> list = interpretations.get(input[0] + "0");
+        for (String s : list) {
+            System.out.printf("%20s%10s\n", s, checkTelephone(s));
+        }
+
+    }
+
+    /**
+     * This method checks if the string is a valid telephone number. To be
+     * valid, a telephone number must either have 10 digits (starting from 2 or
+     * 69) or to have 14 digits (starting from 00302 or 003069).
+     *
+     * @param s
+     * @return
+     */
+    public String checkTelephone(String s) {
+        int length = s.length();
+        if (length == 10 && (s.startsWith("2") || s.startsWith("69"))) {
+            return "VALID";
+        }
+        if (length == 14 && (s.startsWith("00302") || s.startsWith("003069"))) {
+            return "VALID";
+        }
+        return "INVALID";
+    }
 
 }
