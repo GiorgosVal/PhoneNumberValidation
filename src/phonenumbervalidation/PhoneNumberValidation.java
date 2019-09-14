@@ -16,31 +16,42 @@ import java.util.Map;
  */
 public class PhoneNumberValidation {
 
-    public String[] input;
-    public Map<String, List<String>> interpretations = new HashMap();
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-
-        String s = "0 0 30 69 700 24 1 3 50 2";
-        s = "2 10 34 22 154";
-
-        PhoneNumberValidation app = new PhoneNumberValidation();
-        app.start(s);
-
+    private String[] input;
+    private Map<Integer, List<String>> interpretations = new HashMap();
+    
+    
+    public String[] getInput() {
+        return input;
+    }
+    
+    public Map<Integer, List<String>> getInterpretations() {
+        return interpretations;
     }
 
-    public void start(String s) {
-        if (validateAndInitializeInput(s)) {
-            interpret();
-            populate();
-            printInterpretations();
-
+    /**
+     * This method handles the validation process of the input.
+     *
+     * The validation process is step-specific: First the input is checked, then
+     * interpretations for each element are generated, then combinations of the
+     * interpretations are created, and lastly each combination is checked and
+     * print.
+     *
+     * It should be a mistake to expose this logic outside the class. Thus, this
+     * public and static method can be called from outside the class, and can
+     * handle this logic.
+     *
+     * @param s
+     */
+    public static void startValidation(String s) {
+        PhoneNumberValidation app = new PhoneNumberValidation();
+        if (app.validateAndInitializeInput(s)) {
+            app.interpretationsHandler();
+            app.populate();
+            app.printInterpretations();
         } else {
             System.out.println("Not valid input.");
         }
+
     }
 
     /**
@@ -53,7 +64,7 @@ public class PhoneNumberValidation {
      * @param in
      * @return
      */
-    public boolean validateAndInitializeInput(String in) {
+    private boolean validateAndInitializeInput(String in) {
         String[] temp = in.split(" ");
         for (String s : temp) {
             try {
@@ -87,7 +98,7 @@ public class PhoneNumberValidation {
      * key "element + i", where i the number of the loop.
      *
      */
-    public void interpret() {
+    private void interpretationsHandler() {
         for (int i = 0; i < input.length; i++) {
             String number = input[i];
             int length = number.length();
@@ -109,7 +120,7 @@ public class PhoneNumberValidation {
                 list.add(number);
             }
 
-            interpretations.put(number + i, list);
+            interpretations.put(i, list);
         }
     }
 
@@ -122,7 +133,7 @@ public class PhoneNumberValidation {
      * @param s
      * @return
      */
-    public List<String> addZeros(String s) {
+    private List<String> addZeros(String s) {
         List<String> numbers = new ArrayList();
         numbers.add(s);
         numbers.add(s.substring(0, 1).concat("0").concat(s.substring(1)));
@@ -154,7 +165,7 @@ public class PhoneNumberValidation {
      * @param next
      * @return
      */
-    public List<String> removeZeros(String current, String next) {
+    private List<String> removeZeros(String current, String next) {
         List<String> numbers = new ArrayList();
         numbers.add(current);
 
@@ -186,11 +197,11 @@ public class PhoneNumberValidation {
      * previous key. At the end of all loops, the first key of the HashMap
      * contains a list with all possible combinations of the interpretations.
      */
-    public void populate() {
+    private void populate() {
         for (int i = input.length - 1; i > 0; i--) {
 
-            List<String> last = interpretations.get(input[i] + i);
-            List<String> previous = interpretations.get(input[i - 1] + (i - 1));
+            List<String> last = interpretations.get(i);
+            List<String> previous = interpretations.get(i - 1);
 
             List<String> replacement = new ArrayList();
 
@@ -200,7 +211,7 @@ public class PhoneNumberValidation {
                 }
             }
 
-            interpretations.put(input[i - 1] + (i - 1), replacement);
+            interpretations.put(i - 1, replacement);
         }
     }
 
@@ -208,10 +219,12 @@ public class PhoneNumberValidation {
      * This method prints each element while calling the checkTelephone() to
      * check of the element is a valid telephone number.
      */
-    public void printInterpretations() {
-        List<String> list = interpretations.get(input[0] + "0");
+    private void printInterpretations() {
+        List<String> list = interpretations.get(0);
+        int count = 0;
         for (String s : list) {
-            System.out.printf("%20s%10s\n", s, checkTelephone(s));
+            count++;
+            System.out.printf("Interpretation %3s: %-20s%10s\n", count, s, "[phone number: " + checkTelephone(s) + "]");
         }
 
     }
@@ -224,7 +237,7 @@ public class PhoneNumberValidation {
      * @param s
      * @return
      */
-    public String checkTelephone(String s) {
+    private String checkTelephone(String s) {
         int length = s.length();
         if (length == 10 && (s.startsWith("2") || s.startsWith("69"))) {
             return "VALID";
