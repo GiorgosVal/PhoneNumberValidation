@@ -200,7 +200,7 @@ public class PhoneNumberValidation {
      * @param index
      * @return
      */
-    public String addZerosToString(String s, int index) {
+    private String addZerosToString(String s, int index) {
         int howManyZeros = s.length() - (index + 1);
         StringBuilder string = new StringBuilder();
         string

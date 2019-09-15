@@ -20,6 +20,7 @@ public class Main {
         s = "2 10 34 22 154";
         s = "2 10 69 30 6 6 4";
         s = "2 10 6 9 30 6 6 4";
+        s = "022";
         PhoneNumberValidation.startValidation(s);
         
     }
