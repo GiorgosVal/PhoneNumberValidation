@@ -17,10 +17,11 @@ public class Main {
     public static void main(String[] args) {
 
         String s = "0 0 30 69 700 24 1 3 50 2";
-        //s = "2 10 34 22 154";
-
+        s = "2 10 34 22 154";
+        s = "2 10 69 30 6 6 4";
+        s = "2 10 6 9 30 6 6 4";
         PhoneNumberValidation.startValidation(s);
-
+        
     }
 
 }
