@@ -5,6 +5,8 @@
  */
 package phonenumbervalidation;
 
+import java.util.Scanner;
+
 /**
  *
  * @author giorgos
@@ -15,13 +17,23 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        PhoneNumberValidation app = new PhoneNumberValidation();
 
-        String s = "0 0 30 69 700 24 1 3 50 2";
-        s = "2 10 34 22 154";
-        s = "2 10 69 30 6 6 4";
-        s = "2 10 6 9 30 6 6 4";
-        s = "022";
-        PhoneNumberValidation.startValidation(s);
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Give a telephone number.");
+        System.out.println("The numbers must be 1 to 3 characters long and"
+                + " each element must be space separated.");
+        System.out.print("> ");
+        String s = scan.nextLine();
+        
+        
+        while(!app.validateAndInitializeInput(s)) {
+            System.out.print("Not valid input.\n> ");
+            s = scan.nextLine();
+        }
+        
+        app.startValidation(s);
         
     }
 

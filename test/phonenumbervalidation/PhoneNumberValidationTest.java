@@ -53,8 +53,10 @@ public class PhoneNumberValidationTest {
     @Test
     public void testStartValidation_Legal() {
         System.out.println("startValidation");
+        PhoneNumberValidation obj = new PhoneNumberValidation();
         for (String s : legal) {
-            PhoneNumberValidation.startValidation(s);
+            obj.validateAndInitializeInput(s);
+            obj.startValidation(s);
         }
 
         // TODO review the generated test code and remove the default call to fail.

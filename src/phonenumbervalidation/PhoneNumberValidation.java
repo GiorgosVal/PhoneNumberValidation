@@ -43,15 +43,10 @@ public class PhoneNumberValidation {
      *
      * @param s
      */
-    public static void startValidation(String s) {
-        PhoneNumberValidation app = new PhoneNumberValidation();
-        if (app.validateAndInitializeInput(s)) {
-            app.interpretationsHandler();
-            app.populate();
-            app.printInterpretations();
-        } else {
-            System.out.println("Not valid input.");
-        }
+    public void startValidation(String s) {
+        interpretationsHandler();
+        populate();
+        printInterpretations();
 
     }
 
@@ -65,7 +60,7 @@ public class PhoneNumberValidation {
      * @param in
      * @return
      */
-    private boolean validateAndInitializeInput(String in) {
+    public boolean validateAndInitializeInput(String in) {
         String[] temp = in.split(" ");
         for (String s : temp) {
             try {
@@ -73,7 +68,6 @@ public class PhoneNumberValidation {
                     return false;
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
                 return false;
             }
         }
